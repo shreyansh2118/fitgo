@@ -186,7 +186,10 @@ class _TrackdataState extends State<Trackdata > {
                       children: [
                         IconButton(
                           onPressed: () {
-                            // ... (Previous onPressed logic remains unchanged)
+                            setState(() {
+                              userData.removeAt(index);
+                              saveIntoSharedPreferences();
+                            });
                           },
                           icon: Icon(Icons.delete),
                         ),
