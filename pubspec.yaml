@@ -39,7 +39,7 @@ dependencies:
   #  chewie: ^1.7.4
   #  video_player: ^2.7.2
   http:
-  carousel_slider:
+#  carousel_slider:
   intl: ^0.17.0
   shared_preferences: ^2.2.2
 

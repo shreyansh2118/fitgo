@@ -3,7 +3,7 @@ import 'diteReviewer.dart';
 import 'bmicalculator.dart';
 // import '../../fitgo/lib/exercise/homepage.dart';
 import 'exercises/homepage.dart';
-import 'inputpage.dart'; // Import other necessary files
+import 'tracker.dart'; // Import other necessary files
 
 class Task extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _TaskState extends State<Task> {
     FoodNutritionPage(), // Instance of DiteReviewer page
     // SetsRepsPage(), // Instance of Sets and Reps page
     Bmi(title: ''), // Instance of BmiCalculator page
-    HomePage(), // Instance of Profile page
+    Trackdata(), // Instance of Profile page
   ];
 
   @override
