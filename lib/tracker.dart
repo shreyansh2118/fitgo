@@ -23,13 +23,13 @@ class User {
   };
 }
 
-class HomePage extends StatefulWidget {
+class Trackdata extends StatefulWidget {
 
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _TrackdataState createState() => _TrackdataState();
 }
-class _HomePageState extends State<HomePage> {
+class _TrackdataState extends State<Trackdata> {
   late SharedPreferences sharedPreferences;
 
   TextEditingController _date = TextEditingController();
