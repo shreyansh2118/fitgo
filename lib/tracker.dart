@@ -1,208 +1,173 @@
 import 'dart:convert';
+
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserData {
-  String name;
-  double weight;
-  double bmi;
-  double height;
-  DateTime dateTime;
 
-  UserData({
-    required this.name,
-    required this.weight,
-    required this.bmi,
-    required this.height,
-    required this.dateTime,
-  });
+class User {
+  final String date;
+  final String height;
+  final String weight;
 
-  factory UserData.fromJson(Map<String, dynamic> json) {
-    return UserData(
-      name: json['name'],
-      weight: json['weight'].toDouble(),
-      bmi: json['bmi'].toDouble(),
-      height: json['height'].toDouble(),
-      dateTime: DateTime.parse(json['dateTime']),
-    );
-  }
+  User(this.date, this.height,this.weight);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'weight': weight,
-      'bmi': bmi,
-      'height': height,
-      'dateTime': dateTime.toIso8601String(),
-    };
-  }
+  //constructor that convert json to object instance
+  User.fromJson(Map<String, dynamic> json) : date = json['date'],  height = json['height'],weight = json['weight'];
+
+  //a method that convert object to json
+  Map<String, dynamic> toJson() => {
+    'date': date,
+    'height': height,
+    'weight':weight
+  };
 }
 
-class Trackdata extends StatefulWidget {
-  const Trackdata ({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+
 
   @override
-  State<Trackdata > createState() => _TrackdataState();
+  _HomePageState createState() => _HomePageState();
 }
+class _HomePageState extends State<HomePage> {
+  late SharedPreferences sharedPreferences;
 
-class _TrackdataState extends State<Trackdata > {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController weightController = TextEditingController();
-  TextEditingController bmiController = TextEditingController();
-  TextEditingController heightController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  List<UserData> userData = [];
+  TextEditingController _date = TextEditingController();
+  TextEditingController _height = TextEditingController();
+  TextEditingController _weight = TextEditingController();
 
-  late SharedPreferences sp;
+  List<User> userList = []; // List to store User instances
 
   @override
   void initState() {
-    getSharedPreferences();
     super.initState();
+    initialGetSaved();
   }
 
-  getSharedPreferences() async {
-    sp = await SharedPreferences.getInstance();
-    readFromSharedPreferences();
-  }
+  void initialGetSaved() async {
+    sharedPreferences = await SharedPreferences.getInstance();
 
-  saveIntoSharedPreferences() {
-    List<String> userDataString =
-    userData.map((data) => jsonEncode(data.toJson())).toList();
-    sp.setStringList('userData', userDataString);
-  }
+    String? userDataString = sharedPreferences.getString('userdata');
 
-  readFromSharedPreferences() {
-    List<String>? userDataString = sp.getStringList('userData');
     if (userDataString != null) {
-      userData = userDataString
-          .map((data) => UserData.fromJson(json.decode(data)))
-          .toList();
+      List<dynamic> decodedList = jsonDecode(userDataString);
+      List<User> loadedList = decodedList.map((data) => User.fromJson(data)).toList();
+
+      setState(() {
+        userList = loadedList;
+      });
     }
-    setState(() {});
   }
 
-  // @override
-  // ... (Previous code remains unchanged)
+  void storeUserData() {
+    User user1 = User(_date.text, _height.text, _weight.text);
+    userList.add(user1); // Add the new user to the list
+
+    String encodedList = jsonEncode(userList.map((user) => user.toJson()).toList());
+    sharedPreferences.setString('userdata', encodedList);
+    setState(() {
+      _date.text = ''; // Clear text fields after storing data
+      _height.text = '';
+      _weight.text = '';
+    });
+  }
+
+  void clearData() {
+    setState(() {
+      userList = []; // Clear the list of stored users
+      sharedPreferences.remove('userdata');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Track Data'),
+        title: Text('Tracker'),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 10),
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+              Text(
+                'Track your fitness',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  height: 50,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    controller: _date,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Date(YYYY-MM-DD)',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: dateController,
-                decoration: const InputDecoration(
-                  hintText: 'Date (YYYY-MM-DD)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  height: 50,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    controller: _height,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter height',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: weightController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: 'Weight (kg)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  height: 50,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    controller: _weight,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Enter weight',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: bmiController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: 'BMI',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
+              // Other TextFields remain unchanged
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          storeUserData();
+                        },
+                        child: Text('SAVE'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          clearData();
+                        },
+                        child: Text('Clear saved data'),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: heightController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: 'Height (cm)',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // ... (Previous onPressed logic remains unchanged)
-                },
-                child: const Text('Save'),
-              ),
-              const SizedBox(height: 20),
-              userData.isEmpty
-                  ? const Text(
-                'No Data yet..',
-                style: TextStyle(fontSize: 22),
-              )
-                  : ListView.builder(
-                shrinkWrap: true,
-                itemCount: userData.length,
-                itemBuilder: (context, index) {
+
+              // Display list of saved data
+              Column(
+                children: userList.map((user) {
                   return ListTile(
-                    title: Text(userData[index].name),
-                    subtitle: Text(
-                      'Weight: ${userData[index].weight}, BMI: ${userData[index].bmi}, Height: ${userData[index].height}, Date: ${userData[index].dateTime}',
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              userData.removeAt(index);
-                              saveIntoSharedPreferences();
-                            });
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            // ... (Previous onPressed logic remains unchanged)
-                          },
-                          icon: Icon(Icons.edit),
-                        ),
-                      ],
-                    ),
+                    title: Text('Date: ${user.date}'),
+                    subtitle: Text('Height: ${user.height}\nWeight: ${user.weight}'),
                   );
-                },
+                }).toList(),
               ),
             ],
           ),
@@ -211,3 +176,5 @@ class _TrackdataState extends State<Trackdata > {
     );
   }
 }
+
+
