@@ -2,16 +2,16 @@
 import 'package:fitgoapp/exercises/sets_reps.dart';
 import 'package:flutter/material.dart';
 
-// import '../exercise Pages.dart';
 
 class GridPage extends StatelessWidget {
   final List<String> images = [
-    'https://www.realsimple.com/thmb/rEmEAm4vfx67IRbFgoVA0RzhTgI=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/health-benefits-of-pushups-GettyImages-498315681-7008d40842444270868c88b516496884.jpg', // Replace with your image URL
-    'https://ryanspiteri.com/wp-content/uploads/leg-workout-.jpg', // Replace with your image URL
-    'https://images.livemint.com/img/2021/01/25/1140x641/iStock-628092382_1611576531363_1611576553196.jpg', // Replace with your image URL
-    'https://www.healthmates.com.au/wp-content/uploads/2013/08/Bicep-curl-690x400.jpg', // Replace with your image URL
-    'https://images.healthshots.com/healthshots/en/uploads/2022/05/11184715/Yoga-for-weight-loss-770x436.jpg', // Replace with your image URL
-    'https://media.self.com/photos/5dfa77378873ee00093325ae/4:3/w_1920,c_limit/GettyImages-498282756.jpg', // Replace with your image URL
+
+    'assets/pushups.jpg',
+    'assets/squat.jpg',
+    'assets/plank.webp',
+    'assets/Bicepcurl.jpg',
+    'assets/yoga.webp',
+    'assets/abs.webp',
   ];
 
   final List<String> texts = [
@@ -95,25 +95,26 @@ class GridPage extends StatelessWidget {
                     // Example navigation to repTimer screen for each grid item
 
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(images[index]),
-                        fit: BoxFit.cover,
+                   child:  Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(images[index]),  // Use AssetImage to provide the asset path
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        texts[index],
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      child: Center(
+                        child: Text(
+                          texts[index],
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    )
+
                 );
               },
             ),
@@ -294,7 +295,7 @@ class squatPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
                 image: DecorationImage(
                   image: NetworkImage(
-                    'https://ryanspiteri.com/wp-content/uploads/leg-workout-.jpg', // Replace with your image URL
+                    'https://ryanspiteri.com/wp-content/uploads/squat.jpg', // Replace with your image URL
                   ),
 
                 ),
