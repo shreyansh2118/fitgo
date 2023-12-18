@@ -117,7 +117,7 @@ class _TrackdataState extends State<Trackdata> {
                     controller: _height,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Enter height',
+                      labelText: 'Enter height (cm)',
                     ),
                   ),
                 ),
@@ -131,7 +131,7 @@ class _TrackdataState extends State<Trackdata> {
                     controller: _weight,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Enter weight',
+                      labelText: 'Enter weight (kg)',
                     ),
                   ),
                 ),
