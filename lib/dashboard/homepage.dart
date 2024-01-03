@@ -1,10 +1,13 @@
 import 'dart:ui';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:fitgoapp/dashboard/searchBar.dart';
 import 'package:fitgoapp/bmicalculator.dart';
+import 'package:fitgoapp/dashboard/searchBar.dart';
 import 'package:fitgoapp/dashboard/sets_reps.dart';
 import 'package:fitgoapp/diteReviewer.dart';
 import 'package:fitgoapp/exercisePages.dart';
-// import 'package:fitgoapp/exercisepages/exercisePages.dart';
+import 'package:fitgoapp/dashboard/SearchBar.dart';
 // import 'package:fitgoapp/exercises/sets_reps.dart';
 import 'package:fitgoapp/tracker.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +20,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +47,39 @@ class _DashboardState extends State<Dashboard> {
                   colorBlendMode: BlendMode.darken,
                 ),
               ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(100.0),
+                child:   Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter search term',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          String searchTerm = _searchController.text;
+                          if (searchTerm.isNotEmpty) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchBar( searchTerm: searchTerm),
+                              ),
+                            );
+                          }
+                        },
+                        child: Text('Search'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               // actions: [
               //
               // ],
@@ -57,6 +94,7 @@ class _DashboardState extends State<Dashboard> {
               backgroundColor: Colors.black,
               toolbarHeight: 80,
             ),
+
           ];
         },
         body: SingleChildScrollView(
@@ -192,6 +230,9 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+
+
+
   Widget _buildCard(String imageUrl, String text, Widget nextPage) {
     return GestureDetector(
       onTap: () {
@@ -237,3 +278,104 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
+
+// Search bar
+
+class SearchBar extends StatefulWidget {
+  final String searchTerm;
+
+  const SearchBar({required this.searchTerm});
+
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  List<Map<String, dynamic>> exercises = [];
+
+  Future<void> fetchExercises(String input) async {
+    String apiUrl = 'https://api.api-ninjas.com/v1/exercises?muscle=$input';
+
+    try {
+      var response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'X-Api-Key': 'ULUyTcBk1pbdR+ooV1OYJA==nn8aoD5BYM9V4vtk'
+        }, // Replace with your actual API key
+      );
+
+      if (response.statusCode == 200) {
+        // Parse JSON response
+        List<Map<String, dynamic>> data =
+        List<Map<String, dynamic>>.from(json.decode(response.body));
+
+        setState(() {
+          exercises = data;
+        });
+      } else {
+        print('Error: ${response.statusCode}');
+        print(response.body);
+        // Handle error if needed
+      }
+    } catch (e) {
+      print('Exception: $e');
+      // Handle exception
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExercises(widget.searchTerm);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Exercise List'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var exercise in exercises)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      exercise['name'] ?? 'Exercise',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Type: ${exercise['type'] ?? ''}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Equipment: ${exercise['equipment'] ?? ''}',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      exercise['instructions'] ?? '',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                    Divider(),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
