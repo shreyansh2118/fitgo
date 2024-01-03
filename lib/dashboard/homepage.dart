@@ -1,14 +1,11 @@
 import 'dart:ui';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:fitgoapp/dashboard/searchBar.dart';
 import 'package:fitgoapp/bmicalculator.dart';
-import 'package:fitgoapp/dashboard/searchBar.dart';
 import 'package:fitgoapp/dashboard/sets_reps.dart';
 import 'package:fitgoapp/diteReviewer.dart';
 import 'package:fitgoapp/exercisePages.dart';
 import 'package:fitgoapp/dashboard/SearchBar.dart';
-// import 'package:fitgoapp/exercises/sets_reps.dart';
 import 'package:fitgoapp/tracker.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +45,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(100.0),
+                preferredSize: Size.fromHeight(200.0),
                 child:   Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(

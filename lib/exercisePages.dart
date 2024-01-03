@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 
 // bicep page
@@ -57,10 +58,24 @@ class _bicepPageState extends State<bicepPage> {
       appBar: AppBar(
         title: Text('Exercise List'),
       ),
-      body: SingleChildScrollView(
+      body: exercises.isEmpty
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          :SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Lottie.asset(
+                'assets/biceps.json',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
             for (var exercise in exercises)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -155,10 +170,24 @@ class _chestPageState extends State<chestPage> {
       appBar: AppBar(
         title: Text('Exercise List'),
       ),
-      body: SingleChildScrollView(
+      body: exercises.isEmpty
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Lottie.asset(
+                'assets/chest.json',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
             for (var exercise in exercises)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -252,10 +281,24 @@ class _hamstringsState extends State<hamstringsPage> {
       appBar: AppBar(
         title: Text('Exercise List'),
       ),
-      body: SingleChildScrollView(
+      body: exercises.isEmpty
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          :SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Lottie.asset(
+                'assets/squats.json',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
             for (var exercise in exercises)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -349,10 +392,24 @@ class _latsPageState extends State<latsPage> {
       appBar: AppBar(
         title: Text('Exercise List'),
       ),
-      body: SingleChildScrollView(
+      body: exercises.isEmpty
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          :SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Lottie.asset(
+                'assets/lats.json',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
             for (var exercise in exercises)
               Padding(
                 padding: const EdgeInsets.all(8.0),
