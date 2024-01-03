@@ -57,11 +57,17 @@ class _DashboardState extends State<Dashboard> {
                       TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: 'Enter search term',
-                          border: OutlineInputBorder(),
+                          // filled: true,
+                          // fillColor: Colors.grey,
+                          hintText: 'Enter body part name',
+                          hintStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            // borderSide: BorderSide.none
+                          ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
                           String searchTerm = _searchController.text;
