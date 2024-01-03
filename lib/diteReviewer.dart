@@ -17,10 +17,10 @@ class _FoodNutritionPageState extends State<FoodNutritionPage> {
   String _cholestrol="";
   String _Sodium="";
   String _zinc="";
-  String _FASAT="";
-  String _CHOCDF="";
-  String _FIBTG="";
-  String _sugar="";
+  // String _FASAT="";
+  // String _CHOCDF="";
+  // String _FIBTG="";
+  // String _sugar="";
   String _FE="";
   String _CA="";
   String _K="";

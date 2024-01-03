@@ -51,7 +51,7 @@ class _repTimerState extends State<repTimer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercises'),
+        title: Text('Start Your Exercise'),
       ),
       body: Center(
         child: Column(
