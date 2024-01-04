@@ -1,23 +1,41 @@
 import 'dart:ui';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitgoapp/login/authentication.dart';
+import 'package:fitgoapp/login/login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:fitgoapp/bmicalculator.dart';
 import 'package:fitgoapp/dashboard/sets_reps.dart';
 import 'package:fitgoapp/diteReviewer.dart';
 import 'package:fitgoapp/exercisePages.dart';
-import 'package:fitgoapp/dashboard/SearchBar.dart';
+// import 'package:fitgoapp/dashboard/SearchBar.dart';
 import 'package:fitgoapp/tracker.dart';
 import 'package:flutter/material.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
 
+class Dashboard extends StatefulWidget {
+  final String name;
+  Dashboard({Key? key, required this.name}) : super(key: key);
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
   final TextEditingController _searchController = TextEditingController();
+
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  Future<void> _handleSignOut() async {
+    try {
+      await _auth.signOut();
+      await googleSignIn.signOut();
+    } catch (error) {
+      print("Error during sign-out: $error");
+      // Handle error - display a snackbar or show an error dialog to the user
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,8 +77,9 @@ class _DashboardState extends State<Dashboard> {
                           hintText: 'Enter body part name',
                           hintStyle: TextStyle(color: Colors.white),
                           border: OutlineInputBorder(
+
                             borderRadius: BorderRadius.circular(30),
-                            // borderSide: BorderSide.none
+                            borderSide: BorderSide(color: Colors.white),
                           ),
                         ),
                       ),
@@ -138,12 +157,19 @@ class _DashboardState extends State<Dashboard> {
               decoration: BoxDecoration(
                 color: Colors.black45,
               ),
-              child: Text(
-                'Welcome',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
+              child: Column(
+                children: [
+                  SizedBox(height: 20,),
+                  Text(
+                    'Welcome ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Text('${widget.name}')
+                ],
               ),
             ),
             SizedBox(
@@ -154,7 +180,7 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
 
                 decoration: BoxDecoration(
-                    border: Border.all()
+                    border: Border.all( color: Colors.white70)
                 ),
                 child: ListTile(
                   title: Text('BMI', style: TextStyle(
@@ -179,7 +205,7 @@ class _DashboardState extends State<Dashboard> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                    border: Border.all()
+                    border: Border.all( color: Colors.white70)
                 ),
                 child: ListTile(
                   title: Text('Dite revewier', style: TextStyle(
@@ -194,18 +220,28 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //         border: Border.all()
+            //     ),
+            //     child: ListTile(
+            //       title: Text('Dite revewier', style: TextStyle(
+            //           fontSize: 22, fontWeight: FontWeight.w600),),
+            //       onTap: () {
+            //         _handleSignOut();
+            //         // Close the drawer
+            //       },
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               height: 10,
             ),
-            // ListTile(
-            //   title: Text('Button 3'),
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => s()),
-            //     );// Close the drawer
-            //   },
-            // ),
             SizedBox(
               height: 10,
             ),
@@ -213,7 +249,10 @@ class _DashboardState extends State<Dashboard> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 decoration: BoxDecoration(
-                    border: Border.all()
+
+                    border: Border.all(
+                      color: Colors.white70
+                    )
                 ),
                 child: ListTile(
                   title: Text('Tracker', style: TextStyle(
@@ -223,6 +262,29 @@ class _DashboardState extends State<Dashboard> {
                       context,
                       MaterialPageRoute(builder: (context) => Trackdata()),
                     ); // Close the drawer
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all( color: Colors.white70)
+                ),
+                child: ListTile(
+                  title: Text('SignOut', style: TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.w600),),
+                  onTap: () {
+                    AuthenticationHelper()
+                        .signOut()
+                        .then((_) => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (contex) => Login()),
+                    ));
                   },
                 ),
               ),

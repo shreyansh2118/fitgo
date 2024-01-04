@@ -15,13 +15,14 @@ class _BmiState extends State<Bmi> {
   int _counter = 0;
 
 
-  //
+
   // void _incrementCounter() {
   //   setState(() {
   //
   //     _counter++;
   //   });
   // }
+
   var wtController=TextEditingController();
   var ftController=TextEditingController();
   var inController=TextEditingController();
